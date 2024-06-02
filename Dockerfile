@@ -15,16 +15,13 @@ RUN [[ "$TARGETARCH" = "arm64" ]] && echo "export CFLAGS=-mno-outline-atomics" >
 WORKDIR /opt/foundry
 COPY . .
 
-# This is necessary to compile librocksdb-sys
-ENV RUSTFLAGS -Ctarget-feature=-crt-static
-
 RUN --mount=type=cache,target=/root/.cargo/registry --mount=type=cache,target=/root/.cargo/git --mount=type=cache,target=/opt/foundry/target \
-    source $HOME/.profile && cargo build --profile local \
+    source $HOME/.profile && cargo build --release \
     && mkdir out \
-    && mv target/local/forge out/forge \
-    && mv target/local/cast out/cast \
-    && mv target/local/anvil out/anvil \
-    && mv target/local/chisel out/chisel \
+    && mv target/release/forge out/forge \
+    && mv target/release/cast out/cast \
+    && mv target/release/anvil out/anvil \
+    && mv target/release/chisel out/chisel \
     && strip out/forge \
     && strip out/cast \
     && strip out/chisel \
